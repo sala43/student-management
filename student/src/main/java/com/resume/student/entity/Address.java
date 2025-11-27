@@ -2,6 +2,8 @@ package com.resume.student.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Entity
@@ -11,11 +13,20 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotBlank(message = "Place cannot be empty")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Place must contain only letters")
     private String place;
+    @NotBlank(message = "District cannot be empty")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "District must contain only letters")
     private String district;
+    @NotBlank(message = "State cannot be empty")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "State must contain only letters")
     private String state;
+    @NotBlank(message = "Country cannot be empty")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Country must contain only letters")
     private String country;
     private long pincode;
+
     @JsonIgnore
     @OneToOne(mappedBy = "address")
     private Student student;

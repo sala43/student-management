@@ -1,6 +1,8 @@
 package com.resume.student.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.util.List;
 
@@ -12,24 +14,46 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank(message = "First name cannot be empty")
+    @Size(min = 2, max = 20, message = "First name must be between 2 and 20 characters")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "First name must contain only letters")
     private String firstName;
+
+    @NotBlank(message = "Second name cannot be empty")
+    @Size(min = 2, max = 20, message = "Second name must be between 2 and 20 characters")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Second name must contain only letters")
     private String secondName;
+
+    @Min(value = 1, message = "Age must be above 0")
+    @Max(value = 120, message = "Age cannot be more than 120")
     private int age;
+
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email cannot be empty")
     private String email;
+
+    @NotBlank(message = "Role cannot be empty")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Role must contain only letters")
     private String role;
+
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 5, message = "Password must be at least 5 characters")
     private String password;
 
     // --- One-to-One: Student has one Address ---
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
+    @Valid
     private Address address;
 
     // --- One-to-Many: Student has many Educations ---
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @Valid
     private List<Education> educationList;
 
     // --- One-to-Many: Student has many Certificates ---
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @Valid
     private List<Certificate> certificates;
 
     public Student() {
