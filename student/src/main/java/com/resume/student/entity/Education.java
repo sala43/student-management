@@ -3,6 +3,10 @@ package com.resume.student.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.resume.student.entity.Student;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -12,12 +16,27 @@ public class Education {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotBlank(message="schoolName must be enter")
+    @Pattern(regexp = "^[A-Za-z ]+$", message = "School name must contain only letters and spaces")
     private String schoolName;
+    @NotBlank(message="specialization must be enter")
+    @Pattern(regexp = "^[A-Za-z ]+$", message = "specialization must contain only letters and spaces")
     private String specialization;
+    @NotBlank(message = "Purshing is required")
+    @Size(max = 50, message = "Purshing cannot exceed 50 characters")
     private String purshing;
+
+    @NotBlank(message = "Start year is required")
+    @Pattern(regexp = "^(19|20)\\d{2}$", message = "Start year must be a valid 4-digit year")
     private String startYear;
+
+    @NotBlank(message = "End year is required")
+    @Pattern(regexp = "^(19|20)\\d{2}$", message = "End year must be a valid 4-digit year")
     private String endYear;
-    private boolean isCompleted;
+
+    @NotNull(message = "isCompleted is required")
+    private Boolean isCompleted;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "student_id")
