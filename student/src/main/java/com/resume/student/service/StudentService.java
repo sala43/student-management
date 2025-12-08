@@ -9,6 +9,6 @@ public interface StudentService {
     List<Student> getAllStudents();
     Student getStudentById(long id);
     String deleteStudentById(Long id);
-
+    Student updateStudent(Long id, Student student);
 
 }

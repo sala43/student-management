@@ -4,11 +4,13 @@ import com.resume.student.entity.Student;
 import com.resume.student.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -48,4 +50,18 @@ public class StudentController {
         return studentService.deleteStudentById(id);
     }
 
+    @PutMapping("/updateStudent/{id}")
+    public ResponseEntity<?> updateStudent(@PathVariable long id,@Valid @RequestBody Student student,BindingResult result) {
+
+        if (result.hasErrors()) {
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        }
+        studentService.updateStudent(id, student);
+        return ResponseEntity.ok( Map.of("message", "Student updated successfully"));
+
+        }
 }

@@ -49,7 +49,8 @@ public class StudentServiceImplementation implements StudentService{
 
     @Override
     public Student getStudentById(long id) {
-        return studentRepository.findById(id).orElse(null);
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No Student Found with id: " + id));
     }
 
     @Override
@@ -59,5 +60,44 @@ public class StudentServiceImplementation implements StudentService{
         }
         studentRepository.deleteById(id);
         return "Student deleted with id:" + id;
+    }
+
+    @Override
+    public Student updateStudent(Long id, Student student) {
+        Student existingStudent=getStudentById(id);
+        if(existingStudent!=null){
+            existingStudent.setFirstName(student.getFirstName());
+            existingStudent.setSecondName(student.getSecondName());
+            existingStudent.setAge(student.getAge());
+            existingStudent.setEmail(student.getEmail());
+            existingStudent.setRole(student.getRole());
+            existingStudent.setPassword(student.getPassword());
+            if (student.getAddress() != null) {
+                student.getAddress().setStudent(existingStudent); // IMPORTANT
+                existingStudent.setAddress(student.getAddress());
+            }
+            if (student.getEducationList() != null) {
+
+                for (Education e : student.getEducationList()) {
+                    e.setStudent(existingStudent);  // VERY IMPORTANT
+                }
+
+                existingStudent.setEducationList(student.getEducationList());
+            }
+
+            if (student.getCertificates() != null) {
+
+                for (Certificate c : student.getCertificates()) {
+                    c.setStudent(existingStudent);  // IMPORTANT
+                }
+
+                existingStudent.setCertificates(student.getCertificates());
+            }
+
+       return studentRepository.save(existingStudent);
+        }
+        else{
+            throw new RuntimeException("Student Not found with id:" + id);
+        }
     }
 }
