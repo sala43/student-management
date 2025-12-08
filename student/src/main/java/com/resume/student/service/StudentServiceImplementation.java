@@ -40,11 +40,24 @@ public class StudentServiceImplementation implements StudentService{
 
     @Override
     public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+        List<Student> student=studentRepository.findAll();
+        if(student.isEmpty()){
+            throw new RuntimeException("No Students Found");
+        }
+        return student;
     }
 
     @Override
     public Student getStudentById(long id) {
         return studentRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public String deleteStudentById(Long id) {
+        if(!studentRepository.existsById(id)){
+            return "Student Not found with id:" + id;
+        }
+        studentRepository.deleteById(id);
+        return "Student deleted with id:" + id;
     }
 }
